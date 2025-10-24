@@ -1,0 +1,9 @@
+read x;
+read y;
+sum := 0;
+repeat
+    sum := sum + x;
+    x := x - 1;
+until x < 1;
+write sum;
+end

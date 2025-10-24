@@ -1,9 +1,4 @@
-with open("input.txt", "r") as file:
-    content = file.read()
-    print(content)
-print("File read successfully.")
-
-# Define DFA states and transitions
+# Define DFA states and transiions
 # Id, numbers, comments
 # Symbols
 # Reserved words
@@ -147,26 +142,37 @@ def tokenize(input_string):
 #     print(token[0], ":", token[1])
 #     print()
 
-# File Handling and Tokenization Execution
-def process_files(input_filename="input.txt", output_filename="output.txt"):
+def process_files():
     try:
-        with open(input_filename, 'r') as infile:
+        # Ask user for input file name
+        input_filename = input("Enter the input file name (e.g., input.txt), The file must be in the same directory as main.exe: ").strip()
+        output_filename = "output.txt"
+
+        with open(input_filename, "r") as infile:
             input_string = infile.read()
+
+        print("\n--- File Content ---")
+        print(input_string)
+        print("--------------------")
 
         tokens = tokenize(input_string)
 
-        with open(output_filename, 'w') as outfile:
+        print("\n--- Tokenization Result ---")
+        with open(output_filename, "w") as outfile:
             for token_type, token_value in tokens:
-                output_line = f"{token_value}, {token_type}\n"
-                outfile.write(output_line)
+                line = f"{token_value}, {token_type}"
+                print(line)
+                outfile.write(line + "\n")
 
-        print(f"Tokenization complete. Results written to '{output_filename}'.")
+        print("\nTokenization complete.")
+        print(f"Results written to '{output_filename}'.")
 
     except FileNotFoundError:
-        print(f"Error: The file '{input_filename}' was not found. Please create it.")
+        print("Error: Input file not found.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
 
-# Example Usage:
-process_files(input_filename="input.txt", output_filename="output.txt")
+if __name__ == "__main__":
+    process_files()
+    input("\nPress Enter to exit...")

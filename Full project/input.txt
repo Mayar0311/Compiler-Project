@@ -1,15 +1,9 @@
-{ Sample program in TINY language –
-computes factorial}
-read x; {input an integer }
-if 0 < x then { don’t compute if
-x <= 0 }
-fact := 1;
+read x;
+read y;
+sum := 0;
 repeat
-fact := fact * x;
-x := x - 1
-until x = 0;
-write fact { output factorial of x
-}
+    sum := sum + x;
+    x := x - 1;
+until x < 1;
+write sum;
 end
-
-var1 123 { ignore this} var2 456
