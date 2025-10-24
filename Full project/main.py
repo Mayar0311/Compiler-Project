@@ -157,7 +157,7 @@ def process_files(input_filename="input.txt", output_filename="output.txt"):
 
         with open(output_filename, 'w') as outfile:
             for token_type, token_value in tokens:
-                output_line = f"{token_type} : {token_value}\n"
+                output_line = f"{token_value}, {token_type}\n"
                 outfile.write(output_line)
 
         print(f"Tokenization complete. Results written to '{output_filename}'.")
