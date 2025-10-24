@@ -119,6 +119,7 @@ def tokenize(input_string):
             state = transitions[state][ctype]
             token += ch
         elif char_type(ch) == "letter":
+            state = "start"
             ctype = char_type(ch)
             reserved_mode = False
             state = transitions[state][ctype]
