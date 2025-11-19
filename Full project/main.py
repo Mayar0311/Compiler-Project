@@ -15,18 +15,20 @@ transitions = {
     # First letter states
     "i": {"f": "if", "letter": "Inid"},  # Final "if" state
     "t": {"h": "th", "letter": "Inid"},
-    "e": {"n": "en", "letter": "Inid"},
+    "e": {"n": "en", "l": "el", "letter": "Inid"},
     "r": {"e": "re", "letter": "Inid"},
     "u": {"n": "un", "letter": "Inid"},
     "w": {"r": "wr", "letter": "Inid"},
     # Second letter states
     "th": {"e": "the", "letter": "Inid"},
     "en": {"d": "end", "letter": "Inid"},   # Final "end" state
+    "el": {"s": "els", "letter": "Inid"},
     "re": {"p": "rep", "a": "rea", "letter": "Inid"},
     "un": {"t": "unt", "letter": "Inid"},
     "wr": {"i": "wri", "letter": "Inid"},
     # Third letter states
     "the": {"n": "then", "letter": "Inid"},    # Final "then" state
+    "els": {"e": "else", "letter": "Inid"},    # Final "else" state
     "rep": {"e": "repe", "letter": "Inid"},
     "rea": {"d": "read", "letter": "Inid"},    # Final "read" state
     "unt": {"i": "unti", "letter": "Inid"},
@@ -55,6 +57,7 @@ final_states = {
     "closedbracket": "CLOSEDBRACKET",
     "if": "IF",
     "then": "THEN",
+    "else": "ELSE",
     "end": "END",
     "repeat": "REPEAT",
     "until": "UNTIL",

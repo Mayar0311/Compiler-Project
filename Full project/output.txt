@@ -11,7 +11,7 @@ then, THEN
 write, WRITE
 x, IDENTIFIER
 ;, SEMICOLON
-else, IDENTIFIER
+else, ELSE
 write, WRITE
 y, IDENTIFIER
 ;, SEMICOLON
