@@ -13,30 +13,30 @@ transitions = {
 
     ":": {"=": "assign"},
     # First letter states
-    "i": {"f": "if"},  # Final "if" state
-    "t": {"h": "th"},
-    "e": {"n": "en"},
-    "r": {"e": "re"},
-    "u": {"n": "un"},
-    "w": {"r": "wr"},
+    "i": {"f": "if", "letter": "Inid"},  # Final "if" state
+    "t": {"h": "th", "letter": "Inid"},
+    "e": {"n": "en", "letter": "Inid"},
+    "r": {"e": "re", "letter": "Inid"},
+    "u": {"n": "un", "letter": "Inid"},
+    "w": {"r": "wr", "letter": "Inid"},
     # Second letter states
-    "th": {"e": "the"},
-    "en": {"d": "end"},   # Final "end" state
-    "re": {"p": "rep", "a": "rea"},
-    "un": {"t": "unt"},
-    "wr": {"i": "wri"},
+    "th": {"e": "the", "letter": "Inid"},
+    "en": {"d": "end", "letter": "Inid"},   # Final "end" state
+    "re": {"p": "rep", "a": "rea", "letter": "Inid"},
+    "un": {"t": "unt", "letter": "Inid"},
+    "wr": {"i": "wri", "letter": "Inid"},
     # Third letter states
-    "the": {"n": "then"},    # Final "then" state
-    "rep": {"e": "repe"},
-    "rea": {"d": "read"},    # Final "read" state
-    "unt": {"i": "unti"},
-    "wri": {"t": "writ"},
+    "the": {"n": "then", "letter": "Inid"},    # Final "then" state
+    "rep": {"e": "repe", "letter": "Inid"},
+    "rea": {"d": "read", "letter": "Inid"},    # Final "read" state
+    "unt": {"i": "unti", "letter": "Inid"},
+    "wri": {"t": "writ", "letter": "Inid"},
     # Fourth letter states
-    "repe": {"a": "repea"},
-    "unti": {"l": "until"}, # Final "until" state
-    "writ": {"e": "write"}, # Final "write" state
+    "repe": {"a": "repea", "letter": "Inid"},
+    "unti": {"l": "until", "letter": "Inid"}, # Final "until" state
+    "writ": {"e": "write", "letter": "Inid"}, # Final "write" state
     # Fifth letter states
-    "repea": {"t": "repeat"},  # Final "repeat" state
+    "repea": {"t": "repeat", "letter": "Inid"},  # Final "repeat" state
 }
 
 # Define token types
@@ -101,9 +101,7 @@ def tokenize(input_string):
         if token == "" and (ch == "i" or ch == "t" or ch == "e" or ch == "r" or ch == "u" or ch == "w"):
             reserved_mode = True
 
-        if reserved_mode and ch.isalpha():
-            ctype = ch
-        elif ctype == "other" and ch in transitions["start"]:
+        if (reserved_mode and ch.isalpha()) or (ctype == "other" and ch in transitions["start"]):
             ctype = ch
 
         # Ignore whitespace
@@ -119,7 +117,6 @@ def tokenize(input_string):
             state = transitions[state][ctype]
             token += ch
         elif char_type(ch) == "letter":
-            state = "start"
             ctype = char_type(ch)
             reserved_mode = False
             state = transitions[state][ctype]
