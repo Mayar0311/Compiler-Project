@@ -1,0 +1,14 @@
+Program
+  StmtSequence
+    Read: x
+    Read: y
+    If
+      Op: LESSTHAN
+        Id: x
+        Id: y
+      StmtSequence
+        Write
+          Id: x
+      StmtSequence
+        Write
+          Id: y

@@ -1,101 +1,68 @@
 from expressions import exp
+from syntax_tree import ProgramNode, StmtSequenceNode, IfNode, RepeatNode, AssignNode, ReadNode, WriteNode
 
-# Read from scanner output file
-with open('Scanner/output.txt', 'r') as f:
-    tokens = [line.strip() for line in f if line.strip()]
-    token_index = 0
-    
-def get_token():
-    global current_token, token_index
-    if token_index < len(tokens):
-        current_token = tokens[token_index][0]
-        token_index += 1
+def program(parser):
+    seq_node = stmt_sequence(parser)
+    return ProgramNode([seq_node])
+
+def stmt_sequence(parser):
+    statements = []
+    statements.append(statement(parser))
+    while parser.current_token == 'SEMICOLON':
+        parser.match('SEMICOLON')
+        # Check for block terminators to allow trailing semicolons
+        if parser.current_token in ('ELSE', 'END', 'UNTIL', 'EOF'):
+            break
+        statements.append(statement(parser))
+    return StmtSequenceNode(statements)
+
+def statement(parser):
+    if parser.current_token == 'IF':
+        return if_stmt(parser)
+    elif parser.current_token == 'REPEAT':
+        return repeat_stmt(parser)
+    elif parser.current_token == 'IDENTIFIER':
+        return assign_stmt(parser)
+    elif parser.current_token == 'READ':
+        return read_stmt(parser)
+    elif parser.current_token == 'WRITE':
+        return write_stmt(parser)
     else:
-        current_token = 'EOF'
-    return current_token
+        parser.error("Unexpected token in statement")
 
-current_token = get_token()
+def if_stmt(parser):
+    parser.match('IF')
+    condition = exp(parser)
+    parser.match('THEN')
+    then_stmts = stmt_sequence(parser)
+    else_stmts = None
+    if parser.current_token == 'ELSE':
+        parser.match('ELSE')
+        else_stmts = stmt_sequence(parser)
+    parser.match('END')
+    return IfNode(condition, then_stmts, else_stmts)
 
-def match(token):
-    global current_token
-    if current_token == token:
-        current_token = get_token()
-    else:
-        error(f"Expected token {token} but found {current_token}")
+def repeat_stmt(parser):
+    parser.match('REPEAT')
+    body = stmt_sequence(parser)
+    parser.match('UNTIL')
+    condition = exp(parser)
+    return RepeatNode(body, condition)
 
-def error(message):
-    print(f"Parser Error: {message}")
-    print(f"Current token: {current_token}")
+def assign_stmt(parser):
+    identifier = parser.current_value
+    parser.match('IDENTIFIER')
+    parser.match('ASSIGN')
+    expression = exp(parser)
+    return AssignNode(identifier, expression)
 
+def read_stmt(parser):
+    parser.match('READ')
+    identifier = parser.current_value
+    parser.match('IDENTIFIER')
+    return ReadNode(identifier)
 
-def program():
-    stmt_sequence()
-    print("\n✓ Parsing completed successfully!")
-
-def stmt_sequence():
-    statement()
-    while current_token == 'SEMICOLON':
-        match('SEMICOLON')
-        statement()
-    print("stmt_sequence() completed")
-
-def statement():
-    if current_token == 'IF':
-        if_stmt()
-    elif current_token == 'REPEAT':
-        repeat_stmt()
-    elif current_token == 'IDENTIFIER':
-        assign_stmt()
-    elif current_token == 'READ':
-        read_stmt()
-    elif current_token == 'WRITE':
-        write_stmt()
-    else:
-        error("Unexpected token in statement")
-    print("statement() completed")
-
-def if_stmt():
-    match('IF')
-    exp()
-    match('THEN')
-    stmt_sequence()
-    if current_token == 'ELSE':
-        match('ELSE')
-        stmt_sequence()
-    match('END')
-    print("if_stmt() completed")
-
-def repeat_stmt():
-    match('REPEAT')
-    stmt_sequence()
-    match('UNTIL')
-    exp()
-    print("repeat_stmt() completed")
-
-def assign_stmt():
-    match('IDENTIFIER')
-    match('ASSIGN')
-    exp()
-    print("assign_stmt() completed")
-
-def read_stmt():
-    match('READ')
-    match('IDENTIFIER')
-    print("read_stmt() completed")
-
-def write_stmt():
-    match('WRITE')
-    exp()
-    print("write_stmt() completed")
-
-def exp():
-    print("exp() called - placeholder implementation")
-    # Placeholder for expression parsing logic
-
-
-if __name__ == "__main__":
-    print("Starting parser test...\n")
-    try:
-        program()
-    except Exception as e:
-        print(f"\nParser failed with error: {e}")
+def write_stmt(parser):
+    parser.match('WRITE')
+    expression = exp(parser)
+    return WriteNode(expression)
